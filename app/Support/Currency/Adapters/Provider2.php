@@ -29,7 +29,7 @@ class Provider2 extends CurrencyBase implements CurrencyInterface
                 $data[$symbol] = (float)$currency->oran;
             }
 
-            return $this->currencyResponse(200, 'Currency records fetched successfully.', $data);
+            return $this->currencyResponse(200, 'Adapter 2 currency records fetched successfully.', $data);
 
         } catch (\Exception $error) {
             return $this->currencyResponse(503, 'Error: ' . $error->getMessage(), $error);

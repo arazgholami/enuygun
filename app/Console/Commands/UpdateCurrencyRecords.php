@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\CurrencyRecord;
 use App\Support\Currency\CurrencyGateway;
+use HaydenPierce\ClassFinder\ClassFinder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class UpdateCurrencyRecords extends Command
 {
@@ -13,7 +15,7 @@ class UpdateCurrencyRecords extends Command
      *
      * @var string
      */
-    protected $signature = 'update:currency-records {provider=Provider1}';
+    protected $signature = 'update:currency-records {--provider=}';
 
     /**
      * The console command description.
@@ -31,15 +33,35 @@ class UpdateCurrencyRecords extends Command
         parent::__construct();
     }
 
-    private function getMinimumValue($array){
+    private function getAllAdaptersNames($namespace) {
 
-        $min_key = array_search(min($array), $array);
-        $min_value = $array[$min_key];
+        $classes = ClassFinder::getClassesInNamespace($namespace);
 
-        return $parameters = [
-            'symbol' => $min_key,
-            'amount' => $min_value
-        ];
+        $adapters = [];
+        foreach ($classes as $class) {
+
+            $declare = explode("\\", $class);
+            $adapters[] = end($declare);
+        }
+
+        return $adapters;
+    }
+
+    private function fetchData($provider){
+
+        $gateway = new CurrencyGateway($provider);
+        $adapter = $gateway->getClass();
+        $response = $adapter->fetch();
+
+        if ($response['status'] == 200){
+            $this->info($response['message']);
+            return $response['data'];
+        }
+        else{
+            $this->error($response['message']);
+            die();
+        }
+
     }
 
     /**
@@ -49,21 +71,46 @@ class UpdateCurrencyRecords extends Command
      */
     public function handle()
     {
-        $provider = $this->argument('provider');
-        $gateway = new CurrencyGateway($provider);
-        $adapter = $gateway->getClass();
-        $response = $adapter->fetch();
+        $provider = $this->option('provider');
 
-        if ($response['status'] == 200)
-            $this->info($response['message']);
-        else
-            $this->error($response['message']);
+        if ($provider){
+            $response = $this->fetchData($provider);
 
-        $parameters = $this->getMinimumValue($response['data']);
+            foreach ($response as $symbol => $amount){
 
-        $record = new CurrencyRecord();
-        $record->saveRecord($parameters);
+                $parameters = [
+                    'symbol' => $symbol,
+                    'amount' => $amount
+                ];
 
-        $this->info('Currency record saved successfully');
+                $record = new CurrencyRecord();
+                $record->saveRecord($parameters);
+            }
+        }
+        else{
+            $providers =  $this->getAllAdaptersNames('App\Support\Currency\Adapters');
+
+            foreach ($providers as $provider){
+                $response = $this->fetchData($provider);
+
+                foreach ($response as $symbol => $amount){
+                    $currencies[$symbol][] = $amount;
+                }
+            }
+
+            foreach ($currencies as $symbol => $amounts){
+
+                $parameters = [
+                    'symbol' => $symbol,
+                    'amount' => min($amounts)
+                ];
+
+                $record = new CurrencyRecord();
+                $record->saveRecord($parameters);
+                $this->info($symbol . ' records saved successfully');
+            }
+        }
+
+        return;
     }
 }

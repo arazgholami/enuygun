@@ -12,4 +12,12 @@ class Currency extends Model
     {
         return 'symbol';
     }
+
+    public function lastRecord(){
+        return CurrencyRecord::where('currency_id', $this->id)->get()->last();
+    }
+
+    public function lastUpdate(){
+        return CurrencyRecord::where('currency_id', $this->id)->get()->last();
+    }
 }

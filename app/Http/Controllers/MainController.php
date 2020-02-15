@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Currency;
 use App\CurrencyRecord;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -17,24 +18,56 @@ class MainController extends Controller
      */
     public function index()
     {
-        $record = CurrencyRecord::all()->last();
+        Artisan::call('update:currency-records');
 
-        if ($record)
-            $record->date = $record->created_at->format('M d, H:i:s');
+        $records = [];
+        foreach (Currency::all() as $currency){
 
-        return view('welcome', compact('record'));
+            if ($currency->lastRecord()){
+                $lastAmount = $currency->lastRecord()['amount'];
+                $update = $currency->lastRecord()['created_at']->format('M d, H:i:s');
+            }
+            else{
+                $lastAmount = 'No Record.';
+                $update = today()->format('M d, H:i:s');
+            }
+
+            $parameters = [
+                'currency_name' => $currency->name,
+                'amount' => $lastAmount,
+                'date' => $update
+            ];
+
+            array_push($records, $parameters);
+        }
+
+        return view('welcome', compact('records'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function refresh()
     {
         Artisan::call('update:currency-records');
-        $record = CurrencyRecord::all()->last();
-        $record->date = $record->created_at->format('M d, H:i:s');
-        return $record;
+
+        $records = [];
+        foreach (Currency::all() as $currency){
+
+            $lastAmount = $currency->lastRecord()['amount'];
+            $update = $currency->lastRecord()['created_at']->format('M d, H:i:s');
+
+            $parameters = [
+                'name' => $currency->name,
+                'amount' => $lastAmount,
+                'date' => $update
+            ];
+
+            array_push($records, $parameters);
+        }
+
+        return $records;
     }
 }

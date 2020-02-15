@@ -17,9 +17,10 @@ Run `php artisan update:currency-records [ProviderName]`
 
 Note: ProviderName refers to the adapter class name.
 
+Leave option empty for fetch and compare all providers or specify a provider.
+
 Available adapters: `Provider1`, `Provider2`
 
-Also you can leave that option empty.
 
 ### Web:
 First, run `php artisan serve`

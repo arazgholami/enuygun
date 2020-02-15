@@ -24,7 +24,7 @@ class Provider1 extends CurrencyBase implements CurrencyInterface
                 $data[Str::slug($symbol)] = $currency->amount;
             }
 
-            return $this->currencyResponse(200, 'Currency records fetched successfully.', $data);
+            return $this->currencyResponse(200, 'Adapter 1 currency records fetched successfully.', $data);
 
         } catch (\Exception $error) {
             return $this->currencyResponse(503, 'Error: ' . $error->getMessage(), $error);

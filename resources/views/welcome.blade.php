@@ -58,7 +58,7 @@
             margin-bottom: 30px;
         }
 
-        #result{
+        .result{
             font-weight: bold;
         }
     </style>
@@ -69,16 +69,14 @@
         <div class="title m-b-md">
             Enuygun
         </div>
-        <p>
-            Currency with minimum amount: <br>
-
-            @isset($record)
-                <span id="result">{{ $record->currency->name }} {{ $record->amount }}</span><br>
-                Last update: <span id="date">{{ $record->date }}</span>
-            @else
-                <span id="result">No record.</span><br><span id="date"></span>
+        <div id="results">
+            @isset($records)
+                @foreach($records as $record)
+                    <span class="result">{{ $record['currency_name'] }}: {{ $record['amount'] }}</span><br>
+                    Last update: <span class="date">{{ $record['date'] }}</span><br><br>
+                @endforeach
             @endisset
-        </p>
+        </div>
         <a id="refresh" class="btn btn-primary">Fetch & Refresh</a>
     </div>
 </div>
@@ -96,13 +94,20 @@
     $('#refresh').on('click', function(e){
         e.preventDefault();
 
-        $('#result').html('...');
+        $('.result').html('...');
         $('#refresh').html('<i class="fa fa-refresh"></i>');
 
 
         $.post( "/refresh", function(data) {
-            $("#result").html(data.currency.name + ' ' + data.amount);
-            $("#date").html(data.date);
+
+            $('#results').html('');
+            $(data).each(function(key, currency){
+
+                $('#results').append('' +
+                    '<span class="result">' + currency.name +': ' + currency.amount +'</span><br>' +
+                    'Last update: <span class="date">' + currency.date +'</span><br><br>');
+            });
+
         });
 
         $('#refresh').html('Fetch & Refresh');
