@@ -7,7 +7,7 @@ This project is based on Laravel 6.12 for Enuygun Case Study.
 1. Clone repository
 2. Run `composer install`
 3. Make new database with this name: `enuygun`
-4. Copy `.env` file that is provided in email attachment.
+4. Copy `.env` file that is provided in email attachment and edit `DB_USERNAME` and `DB_PASSWORD`
 5. Run `php artisan migrate --seed`
 
 ## Usage
