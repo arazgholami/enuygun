@@ -71,10 +71,15 @@
         </div>
         <p>
             Currency with minimum amount: <br>
-            <span id="result">{{ $record->currency->name }} {{ $record->amount }}</span><br>
-            Last update: <span id="date">{{ $record->date }}</span>
+
+            @isset($record)
+                <span id="result">{{ $record->currency->name }} {{ $record->amount }}</span><br>
+                Last update: <span id="date">{{ $record->date }}</span>
+            @else
+                <span id="result">No record.</span><br><span id="date"></span>
+            @endisset
         </p>
-        <a id="refresh" class="btn btn-primary">Refresh</a>
+        <a id="refresh" class="btn btn-primary">Fetch & Refresh</a>
     </div>
 </div>
 <script
@@ -100,7 +105,7 @@
             $("#date").html(data.date);
         });
 
-        $('#refresh').html('Refresh');
+        $('#refresh').html('Fetch & Refresh');
     });
 
 </script>

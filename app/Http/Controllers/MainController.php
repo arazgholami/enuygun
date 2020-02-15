@@ -18,7 +18,10 @@ class MainController extends Controller
     public function index()
     {
         $record = CurrencyRecord::all()->last();
-        $record->date = $record->created_at->format('M d, H:i:s');
+
+        if ($record)
+            $record->date = $record->created_at->format('M d, H:i:s');
+
         return view('welcome', compact('record'));
     }
 
