@@ -13,11 +13,11 @@ This project is based on Laravel 6.12 for Enuygun Case Study.
 ## Usage
 
 ### CLI:
-Run `php artisan update:currency-records [ProviderName]`
-
-Note: ProviderName refers to the adapter class name.
+Run `php artisan update:currency-records [--provider=ProviderName]`
 
 Leave option empty for fetch and compare all providers or specify a provider.
+
+Note: ProviderName refers to the adapter class name.
 
 Available adapters: `Provider1`, `Provider2`
 
