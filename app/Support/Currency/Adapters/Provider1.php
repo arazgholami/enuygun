@@ -9,6 +9,9 @@ use Illuminate\Support\Str;
 
 class Provider1 extends CurrencyBase implements CurrencyInterface
 {
+    /**
+     * @return array|mixed
+     */
     public function fetch()
     {
         try {

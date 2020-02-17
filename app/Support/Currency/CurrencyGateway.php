@@ -6,6 +6,10 @@ class CurrencyGateway
 {
     private $namespace = null;
 
+    /**
+     * CurrencyGateway constructor.
+     * @param $provider
+     */
     public function __construct($provider)
     {
         $namespace = 'App\\Support\\Currency\\Adapters\\' . $provider;
@@ -15,6 +19,9 @@ class CurrencyGateway
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getClass()
     {
         return new $this->namespace;

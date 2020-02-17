@@ -33,6 +33,13 @@ class UpdateCurrencyRecords extends Command
         parent::__construct();
     }
 
+    /**
+     * Fetch all available adapters.
+     *
+     * @param $namespace
+     * @return array
+     * @throws \Exception
+     */
     private function getAllAdaptersNames($namespace) {
 
         $classes = ClassFinder::getClassesInNamespace($namespace);
@@ -47,6 +54,12 @@ class UpdateCurrencyRecords extends Command
         return $adapters;
     }
 
+    /**
+     * Fetching currencies amounts from given provider.
+     *
+     * @param $provider
+     * @return mixed
+     */
     private function fetchData($provider){
 
         $gateway = new CurrencyGateway($provider);
@@ -68,6 +81,7 @@ class UpdateCurrencyRecords extends Command
      * Execute the console command.
      *
      * @return mixed
+     * @throws \Exception
      */
     public function handle()
     {

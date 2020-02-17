@@ -15,6 +15,9 @@ class Provider2 extends CurrencyBase implements CurrencyInterface
         'İNGİLİZ STERLİNİ' => 'gbp'
     ];
 
+    /**
+     * @return array|mixed
+     */
     public function fetch()
     {
         try {

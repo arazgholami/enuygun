@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class MainController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the currencies.
      *
      * @return Factory|View
      */
@@ -45,7 +45,7 @@ class MainController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Refresh endpoint for ajax refreshing button.
      *
      * @return array
      */
